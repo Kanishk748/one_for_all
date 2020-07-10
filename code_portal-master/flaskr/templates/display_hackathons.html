@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for hackathon in hackathons.items %} # here we need to account for total posts in hackathons, contests, and jobs...
+        #                               so we can just make field in user class named posts and every time users enter a post we will
+        #                               increase it value by 1..
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('user_posts', username=hackathon.author.username) }}">{{ hackathon.author.username }}</a>
+              <small class="text-muted">{{ hackathon.contest_date }}</small>
+            </div>
+            <h2><a class="article-title" href="{{ url_for('hackathon', hackathon_id=hackathon.id) }}">{{ hackathon.title }}</a></h2>
+            <small class="text-muted">{{ hackathon.contest_url }}</small>
+            <p class="article-content">{{ hackathon.content }}</p>
+          </div>
+        </article>
+    {% endfor %}
+    {% for page_num in hackathons.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+     {% if page_num %}
+       {% if hackathons.page == page_num %}
+         <a class="btn btn-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+       {% else %}
+         <a class="btn btn-outline-info mb-4" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a>
+       {% endif %}
+     {% else %}
+       ...
+     {% endif %}
+{% endfor %}
+{% endblock content %}
