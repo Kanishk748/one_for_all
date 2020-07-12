@@ -53,7 +53,7 @@ def register():
         return redirect(url_for('home'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        temp_user = User(username=form.username.data, pwd=form.password.data)
+        temp_user = User(username=form.username.data, pwd=form.password.data, points=0)
         db.session.add(temp_user)
         db.session.commit()
         flash('Account Created! You are now able to log in', 'success')
@@ -83,6 +83,8 @@ def new_post():
                     content=form.content.data,
                     author=current_user, contest_date=form.date.data)
         db.session.add(post)
+        db.session.commit()
+        post.author.points += 5 #contests weightage as 5
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('display_conetests'))
@@ -146,6 +148,8 @@ def new_hackathon():
                     author=current_user, contest_date=form.date.data)
         db.session.add(hackathon)
         db.session.commit()
+        hackathon.author.points += 5  # contests weightage as 5
+        db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('display_hackathons'))
     return render_template('create_hackathon.html',
@@ -208,6 +212,8 @@ def new_hackathon():
                     content=form.content.data,
                     author=current_user, contest_date=form.date.data)
         db.session.add(job)
+        db.session.commit()
+        job.author.points += 5  # contests weightage as 5
         db.session.commit()
         flash('Your post has been created!', 'success')
         return redirect(url_for('display_jobs'))
